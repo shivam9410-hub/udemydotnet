@@ -8,7 +8,6 @@ namespace BloggieWeb.Data
        public BloggieDbContext(DbContextOptions<BloggieDbContext> options) : base(options) {
       
             
-            options.
 
         
         

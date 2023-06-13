@@ -30,7 +30,7 @@ namespace BloggieWeb.Controllers
         public IActionResult
             Add(AddTagRequest addTagRequest)
         {
-            //mapping addtorequst to tag domain model
+  
             var tag = new Tag
         { Name = addTagRequest.Name,
           DisplayName = addTagRequest.DisplayName
@@ -40,7 +40,16 @@ namespace BloggieWeb.Controllers
             _bloggieDbContext.Tags.Add(tag);
             _bloggieDbContext.SaveChanges();
 
-            return View("Add");
+            return RedirectToAction("List");
+        }
+
+        [HttpGet]
+        [ActionName("List")]
+        public IActionResult List()
+        {   // user dbcontext to read the tags 
+
+         var tags=   _bloggieDbContext.Tags.ToList();
+            return View(tags);
         }
     }
 }
