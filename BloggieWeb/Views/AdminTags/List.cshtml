@@ -1,5 +1,5 @@
 ﻿@model  List< BloggieWeb.Models.Domain.Tag>
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    
 
 
 <div class="bg-secondary bg-opacity-10 py-2">
@@ -9,7 +9,7 @@
     </div>
 </div>
 <div class="container">
-    @if(Model!=null && Model.Any())
+    @if(Model!=null && Model.Any() )
     {
         <table class="table">
             <thead>
@@ -17,6 +17,7 @@
                     <th>Id </th>
                     <th>Name</th>
                     <th>Display Name</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +26,9 @@
                     <td>@tag.Id</td>
                     <td>@tag.Name</td>
                 <td>@tag.DisplayName</td>
-                </tr>
+              <td><a asp-area="" asp-controller="AdminTags" asp-action="Edit" asp-route-id="@tag.Id" >Edit</a></td>    
+           
+          </tr>
                     
                 }
             </tbody>

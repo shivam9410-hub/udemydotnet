@@ -1,7 +1,9 @@
 ﻿using BloggieWeb.Data;
 using BloggieWeb.Models.Domain;
 using BloggieWeb.Models.ViewModel;
+using BloggieWeb.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 
 namespace BloggieWeb.Controllers
@@ -9,11 +11,16 @@ namespace BloggieWeb.Controllers
     public class AdminTagsController : Controller
     {
 
-        private BloggieDbContext _bloggieDbContext;
-        public AdminTagsController(BloggieDbContext bloggieDbContext) {
+   /*     private BloggieDbContext _bloggieDbContext;*/
+       // public AdminTagsController(BloggieDbContext bloggieDbContext) {
           
-        _bloggieDbContext=bloggieDbContext;
+       // _bloggieDbContext=bloggieDbContext;
        
+        //}
+        private readonly ITagRepository tagRepository;
+        public AdminTagsController(ITagRepository tagRepository)
+        {
+            this.tagRepository = tagRepository;
         }
 
 
@@ -21,35 +28,85 @@ namespace BloggieWeb.Controllers
         public IActionResult Add()
         {
             return View();
-       
+
         }
 
         [HttpPost]
-
         [ActionName("Add")]
-        public IActionResult
+        public async Task< IActionResult>
             Add(AddTagRequest addTagRequest)
         {
   
             var tag = new Tag
         { Name = addTagRequest.Name,
-          DisplayName = addTagRequest.DisplayName
+          DisplayName = addTagRequest.DisplayName 
         
           };
 
-            _bloggieDbContext.Tags.Add(tag);
-            _bloggieDbContext.SaveChanges();
+            //   await _bloggieDbContext.Tags.AddAsync(tag);
+            //  await    _bloggieDbContext.SaveChangesAsync();
+           await tagRepository.AddAsync(tag);
 
-            return RedirectToAction("List");
+
+          return RedirectToAction("List");
         }
 
         [HttpGet]
         [ActionName("List")]
-        public IActionResult List()
+
+        public async Task<IActionResult> List()
         {   // user dbcontext to read the tags 
 
-         var tags=   _bloggieDbContext.Tags.ToList();
+            var tags = await tagRepository.GetAllAsync();
             return View(tags);
+        }
+        [HttpGet]
+        public async  Task<IActionResult> Edit(Guid id){
+
+         var tag=   await tagRepository.GetAsync(id);
+
+            if (tag != null)
+            {
+                var editTagRequest=new EditTagRequest { Id = tag.Id, Name = tag.Name, DisplayName = tag.DisplayName };
+
+             return View(editTagRequest);
+            }
+
+
+            return View(null);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditTagRequest editTagRequest)
+        {
+
+             var tag  = new Tag { Id = editTagRequest.Id, Name = editTagRequest.Name, DisplayName = editTagRequest.DisplayName };
+
+        var updatedTag= await   tagRepository.UpdateAsync(tag);
+
+            if (updatedTag != null)
+            {
+
+            }
+            else
+            {
+
+            }
+            return RedirectToAction("Edit", new { id = editTagRequest.Id });
+        }
+        [HttpPost]
+        public  async Task<IActionResult> Delete(EditTagRequest editTagRequest)
+        {
+    var deleteTag=  await tagRepository.DeleteAsync(editTagRequest.Id);
+               if(deleteTag != null)
+            {
+                //show success notification 
+                return RedirectToAction("List");
+            
+            }
+
+            return RedirectToAction("Edit" , new {id= editTagRequest.Id});
         }
     }
 }
