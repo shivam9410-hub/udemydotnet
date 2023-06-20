@@ -95,6 +95,7 @@ namespace BloggieWeb.Controllers
             }
             return RedirectToAction("Edit", new { id = editTagRequest.Id });
         }
+
         [HttpPost]
         public  async Task<IActionResult> Delete(EditTagRequest editTagRequest)
         {

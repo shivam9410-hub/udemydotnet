@@ -1,13 +1,10 @@
-﻿using BloggieWeb.Models.Domain;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BloggieWeb.Models.ViewModel
 {
-    public class AddBlogPostRequest
+    public class EditBlogPostRequest
     {
-
-    
+        public Guid Id { get; set; }
         public string Heading { get; set; }
 
         public string PageTitle { get; set; }
@@ -22,9 +19,8 @@ namespace BloggieWeb.Models.ViewModel
         public bool Visible { get; set; }
 
         //display tags 
-        public  IEnumerable<SelectListItem>Tags{ get; set; }
+        public IEnumerable<SelectListItem> Tags { get; set; }
         //Collect Tags 
         public string[] SelectedTags { get; set; } = Array.Empty<string>();
-
     }
 }
